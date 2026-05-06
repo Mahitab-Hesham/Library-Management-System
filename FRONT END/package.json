@@ -1,0 +1,14 @@
+{
+  "name": "lms-frontend",
+  "version": "1.0.0",
+  "description": "Library Management System - modern frontend shell",
+  "scripts": {
+    "dev": "npx lite-server",
+    "format": "npx prettier --write ."
+  },
+  "devDependencies": {
+    "lite-server": "^2.6.1",
+    "prettier": "^3.2.5"
+  }
+}
+

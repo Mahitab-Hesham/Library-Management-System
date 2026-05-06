@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<!----Starting HTML---->
+<html lang="ar" dir="rtl">
+<!---Start Head --->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المكتبة | Library Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<!---End Head--->
+
+<!----Start Body---->
+<body>
+    <!---Starting the main app--->
+    <div class="app-shell">
+        <!---Starting aside--->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo">LMS</div>
+                <div>
+                    <strong>Library</strong>
+                    <small>Management System</small>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-panel="books">
+                    <span>📚</span>
+                    <div>
+                        <strong>لوحة الكتب</strong>
+                        <small>عرض الكتب</small>
+                    </div>
+                </button>
+
+                <button class="nav-btn" data-panel="borrow" data-require-role="user">
+                    <span>🔄</span>
+                    <div>
+                        <strong>الإعارة والإرجاع</strong>
+                        <small>إدارة العمليات</small>
+                    </div>
+                </button>
+
+                <button class="nav-btn" data-panel="edit-book" data-require-role="staff">
+                    <span>✏️</span>
+                    <div>
+                        <strong>تعديل الكتب</strong>
+                        <small>إضافة - حذف</small>
+                    </div>
+                </button>
+
+                <button class="nav-btn" data-panel="users" data-require-role="staff">
+                    <span>👤</span>
+                    <div>
+                        <strong>المستخدمون</strong>
+                        <small>تسجيل - تتبع</small>
+                    </div>
+                </button>
+
+                <button class="nav-btn" data-panel="staff" data-require-role="manager">
+                    <span>🧑‍💼</span>
+                    <div>
+                        <strong>الموظفون</strong>
+                        <small>انضمام جديد</small>
+                    </div>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>⚡️ جاهز للعرض التقديمي</p>
+                <span>جامعة الإسكندرية · خريف 2025</span>
+            </div>
+        </aside>
+        <!---Ending aside--->
+
+        <!---Starting main content--->
+        <main class="workspace">
+            <!---Starting Header--->
+            <header class="hero">
+                <div>
+                    <p class="hero-subtitle">لوحة تحكم المكتبة</p>
+                    <h1>مرحباً بك في <span>نظام إدارة المكتبة</span></h1>
+                    <p class="hero-text">كل ما تحتاجه لإدارة الكتب، المستخدمين والإعارات في لوحة واحدة.</p>
+                </div>
+                <div class="hero-meta">
+                    <div>
+                        <p>التاريخ</p>
+                        <strong id="today-date">-- / -- / ----</strong>
+                    </div>
+                    <div>
+                        <p>آخر تحديث</p>
+                        <strong id="last-sync">لم يتم التحديث</strong>
+                    </div>
+                </div>
+            </header>
+            <!---Ending Header--->
+            
+            <!---Starting the first section--->
+            <section class="status-grid">
+                <article class="status-card">
+                    <span>📘</span>
+                    <div>
+                        <p>إجمالي النسخ</p>
+                        <strong id="stat-total-books">0</strong>
+                    </div>
+                </article>
+
+                <article class="status-card">
+                    <span>📚</span>
+                    <div>
+                        <p>عدد الكتب</p>
+                        <strong id="stat-book-count">0</strong>
+                    </div>
+                </article>
+            </section>
+            <!---Ending the first section--->
+
+            <!--- Starting books section --->
+            <section id="panel-books" class="panel active">
+                <div class="panel-header">
+                    <div>
+                        <p>إدارة الكتب</p>
+                        <h2>عرض تفاعلي للكتب</h2>
+                    </div>
+                </div>
+                <div id="books-list" class="cards-grid"></div>
+            </section>
+            <!--- Ending books section --->
+
+            <!--- starting the section which the stuff member edit books from --->
+            <section id="panel-edit-book" class="panel" data-require-role="staff">
+                <div class="panel-header">
+                    <div>
+                        <p>تعديل الكتب</p>
+                        <h2>إضافة وحذف الكتب</h2>
+                    </div>
+                </div>
+
+                <div class="card-form">
+                    <h3>إضافة كتاب جديد</h3>
+                    <form id="form-add-book" class="stacked-form">
+                        <div class="two-column">
+                            <label>عنوان الكتاب
+                                <input type="text" name="book_name" required  placeholder="enter your book title">
+                            </label>
+                            <label>اسم المؤلف
+                                <input type="text" name="author_name" required placeholder="enter author name">
+                            </label>
+                        </div>
+                        <div class="two-column">
+                            <label>سنة الإصدار
+                                <input type="number" name="publishing_year" required placeholder="enter publishing year">
+                            </label>
+                            <label>عدد النسخ
+                                <input type="number" name="available_copies" value="1" required placeholder="enter available copies">
+                            </label>
+                        </div>
+                        <div class="two-column">
+                            <label>اللغة
+                                <input type="text" name="book_language" placeholder="English">
+                            </label>
+                            <label>عدد الصفحات
+                                <input type="number" name="total_pages" placeholder="enter total pages">
+                            </label>
+                        </div>
+                        <label>رابط صورة الغلاف
+                            <input type="url" name="book_cover" placeholder="https://example.com/cover.jpg">
+                        </label>
+                        <label>وصف الكتاب
+                            <textarea name="book_description" rows="3" placeholder=".this is an adveture book"></textarea>
+                        </label>
+                        <button type="submit">إضافة الكتاب</button>
+                    </form>
+                    <div id="add-book-message" class="alert"></div>
+                </div>
+
+                <div class="card-form" style="margin-top: 2rem;">
+                    <h3>حذف كتاب</h3>
+                    <form id="form-delete-book" class="stacked-form">
+                        <label>رقم الكتاب المراد حذفه
+                            <input type="number" name="book_id" required placeholder="أدخل رقم الكتاب">
+                        </label>
+                        <button type="submit" style="background: #dc3545;">حذف الكتاب</button>
+                    </form>
+                    <div id="delete-book-message" class="alert"></div>
+                </div>
+            </section>
+            <!--- Ending edit books section --->
+
+            <!---Starting borrowing Process Section--->
+            <section id="panel-borrow" class="panel" data-require-role="user">
+                <div class="panel-header">
+                    <div>
+                        <p>عمليات الإعارة والإرجاع</p>
+                        <h2>خطوات بسيطة وواضحة</h2>
+                    </div>
+                </div>
+                <div class="two-column">
+                    <div class="card-form">
+                        <h3>إعارة جديدة</h3>
+                        <form id="action-borrow" class="stacked-form">
+                            <label>رقم المستخدم
+                                <input type="number" name="user_id" required placeholder="ex: 1">
+                            </label>
+                            <label>رقم الكتاب
+                                <input type="number" name="book_id" required placeholder="ex: 10">
+                            </label>
+                            <label>رقم الموظف المسئول
+                                <input type="number" name="staff_id" required placeholder="ex: 2">
+                            </label>
+                            <button type="submit">تنفيذ الإعارة</button>
+                        </form>
+                        <div id="borrow-message" class="alert"></div>
+                    </div>
+
+                    <div class="card-form">
+                        <h3>إرجاع كتاب</h3>
+                        <form id="action-return" class="stacked-form">
+                            <label>رقم العملية
+                                <input type="number" name="process_code" required placeholder="ex: 123456">
+                            </label>
+                            <button type="submit">تأكيد الإرجاع</button>
+                        </form>
+                        <div id="return-message" class="alert"></div>
+                    </div>
+                </div>
+            </section>
+            <!--Ending borrowing Process Section-->
+
+           <!---Starting the section which stuff member can manage users--->
+            <section id="panel-users" class="panel" data-require-role="staff">
+                <div class="panel-header">
+                    <div>
+                        <p>المستخدمون</p>
+                        <h2>تسجيل وتتبع الإعارات</h2>
+                    </div>
+                </div>
+                <div class="two-column">
+                    <div class="card-form">
+                        <h3>تسجيل مستخدم جديد</h3>
+                        <form id="form-user" class="stacked-form">
+                            <label>الاسم الكامل
+                                <input type="text" name="fullname" required placeholder="enter your fallname here.">
+                            </label>
+                            <label>اسم المستخدم
+                                <input type="text" name="username" required placeholder="enter your username">
+                            </label>
+                            <label>البريد الإلكتروني
+                                <input type="email" name="email" required placeholder="user@gmail.com">
+                            </label>
+                            <label>رقم الهاتف
+                                <input type="tel" name="phone_number" placeholder="01012345678">
+                            </label>
+                            <label>نوع المستخدم
+                                <select name="user_type" required>
+                                    <option value="">اختر</option>
+                                    <option value="Student">طالب (3)</option>
+                                    <option value="Faculty">هيئة تدريس (10)</option>
+                                    <option value="External_user">خارجي (5)</option>
+                                </select>
+                            </label>
+                            <label>تاريخ الميلاد
+                                <input type="date" name="date_of_birth" required>
+                            </label>
+                            <label>كلمة المرور
+                                <input type="password" name="password" required>
+                            </label>
+                            <button type="submit">تسجيل المستخدم</button>
+                        </form>
+                        <div id="user-message" class="alert"></div>
+                    </div>
+
+                    <div class="card-form">
+                        <h3>إعارات المستخدم</h3>
+                        <form id="form-user-borrows" class="stacked-form inline">
+                            <label>رقم المستخدم
+                                <input type="number" name="user_id" required>
+                            </label>
+                            <button type="submit">عرض الإعارات</button>
+                        </form>
+                        <div id="user-borrowings" class="list"></div>
+                    </div>
+
+                    <div class="card-form">
+                        <h3>حذف مستخدم</h3>
+                        <form id="form-delete-user" class="stacked-form inline">
+                            <label>رقم المستخدم
+                                <input type="number" name="user_id" required>
+                            </label>
+                            <button type="submit" class="danger-btn">حذف المستخدم</button>
+                        </form>
+                        <div id="delete-user-message" class="alert"></div>
+                    </div>
+                </div>
+            </section>
+            <!---Ending users management section--->
+
+            <!---Starting the section which manager can manage staff members--->
+            <section id="panel-staff" class="panel" data-require-role="manager">
+                <div class="panel-header">
+                    <div>
+                        <p>فريق المكتبة</p>
+                        <h2>انضمام الموظفين الجدد</h2>
+                    </div>
+                </div>
+                <div class="card-form">
+                    <h3>تسجيل موظف</h3>
+                    <form id="form-staff" class="stacked-form">
+                        <label>الاسم الكامل
+                            <input type="text" name="staff_member_name" required placeholder="enter your fallname here.">
+                        </label>
+                        <label>البريد الإلكتروني
+                            <input type="email" name="email" required placeholder="member@gmail.com">
+                        </label>
+                        <label>رقم الهاتف
+                            <input type="tel" name="phone_number" placeholder="01012345678">
+                        </label>
+                        <label>المنصب
+                            <select name="member_position" required>
+                                <option value="">اختر</option>
+                                <option value="Library Manager">مدير</option>
+                                <option value="Librarian">أمين</option>
+                                <option value="Library Assistant">مساعد</option>
+                                <option value="Library Technician">فني</option>
+                            </select>
+                        </label>
+                        <label>تاريخ التوظيف
+                            <input type="date" name="hire_date" required>
+                        </label>
+                        <label>الراتب
+                            <input type="number" name="salary" step="0.01" placeholder="1000.00">
+                        </label>
+                        <label>اسم المستخدم
+                            <input type="text" name="username" required placeholder="enter your username">
+                        </label>
+                        <label>تاريخ الميلاد
+                            <input type="date" name="date_of_birth" required >
+                        </label>
+                        <label>كلمة المرور
+                            <input type="password" name="password" required placeholder="your password must be at least 6 numbers or characters.">
+                        </label>
+                        <button type="submit">إضافة الموظف</button>
+                    </form>
+                    <div id="staff-message" class="alert"></div>
+                </div>
+
+                <div class="card-form">
+                    <h3>حذف موظف</h3>
+                    <form id="form-delete-staff" class="stacked-form inline">
+                        <label>رقم الموظف
+                            <input type="number" name="staff_id" required>
+                        </label>
+                        <button type="submit" class="danger-btn">حذف الموظف</button>
+                    </form>
+                    <div id="delete-staff-message" class="alert"></div>
+                </div>
+            </section>
+            <!---Ending staff management section--->
+
+            <!-- Login Modal - يظهر عند عدم تسجيل الدخول -->
+            <div id="login-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>تسجيل الدخول</h2>
+                    
+                    <div class="login-tabs">
+                        <button class="login-tab-btn active" data-mode="user">مستخدم</button>
+                        <button class="login-tab-btn" data-mode="staff">موظف</button>
+                    </div>
+
+                    <form id="form-user-login" class="login-form active stacked-form">
+                        <label>اسم المستخدم
+                            <input type="text" name="username" required placeholder="Please enter your username.">
+                        </label>
+                        <label>كلمة المرور
+                            <input type="password" name="password" required placeholder="your password must be 6 numbers|| characters at least">
+                        </label>
+                        <button type="submit">تسجيل الدخول</button>
+                    </form>
+
+                    <form id="form-staff-login" class="login-form stacked-form">
+                        <label>اسم المستخدم
+                            <input type="text" name="username" required placeholder="Please enter your username." >
+                        </label>
+                        <label>كلمة المرور
+                            <input type="password" name="password" required placeholder="your password must be 6 numbers|| characters at least" >
+                        </label>
+                        <button type="submit">تسجيل الدخول</button>
+                    </form>
+
+                    <div id="login-message" class="alert"></div>
+                </div>
+            </div>
+
+        </main>
+        <!---Ending main content--->
+    </div>
+    <!---Ending the main app--->
+    <div id="toast-container"></div>
+
+    <!---Link the html with JavaScript--->
+    <script src="script.js" type="module"></script>
+</body>
+
+<!----End Body---->
+
+
+</html>
+<!---End HTML---->
